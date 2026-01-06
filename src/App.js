@@ -10,11 +10,11 @@ import { useState } from 'react';
 
 function App() {
   const [reservations, setReservations] = useState([
-    { id: 0, customerId: 0, date: '2025-12-20', time: '10:00', menu: 'ホテル', status: '予約中' },
-    { id: 1, customerId: 1, date: '2025-12-20', time: '9:00', menu: '散歩代行', status: '予約中' },
-    { id: 2, customerId: 2, date: '2025-12-20', time: '8:00', menu: 'ホテル', status: '予約中' },
-    { id: 3, customerId: 3, date: '2025-12-19', time: '14:00', menu: 'トリミング', status: '完了' },
-    { id: 4, customerId: 4, date: '2025-12-19', time: '16:00', menu: 'トリミング', status: 'キャンセル' },
+    { id: 0, customerId: 0, date: '2025-12-20', time: '10:00', menu: 'ホテル', fee:8000, status: '予約中' },
+    { id: 1, customerId: 1, date: '2025-12-20', time: '9:00', menu: '散歩代行', fee:3000, status: '予約中' },
+    { id: 2, customerId: 2, date: '2025-12-20', time: '8:00', menu: 'ホテル', fee:8000, status: '予約中' },
+    { id: 3, customerId: 3, date: '2025-12-19', time: '14:00', menu: 'トリミング', fee:6000, status: '完了' },
+    { id: 4, customerId: 4, date: '2025-12-19', time: '16:00', menu: 'トリミング', fee:6000, status: 'キャンセル' },
   ]);
   const [customers, setCustomers] = useState([
     { id: 0, name: '鈴木一郎', breed: '柴犬', dog: 'ポチ', phoneNumber: '090-0000-0000', },
@@ -42,6 +42,7 @@ function App() {
       {page === 'services' && <Services />}
       {page === 'customers' && <Customers
         customers={customers}
+        setCustomers={setCustomers}
         reservations={reservations}
         setReservations={setReservations}
       />}

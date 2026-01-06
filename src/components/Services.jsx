@@ -75,11 +75,11 @@ function Services() {
   return (
     <div className="container">
       <h2 className="section-title">サービス一覧</h2>
-      <button className="add-service" onClick={() => setShowForm(true)}>＋　サービスの追加</button>
+      <button className="add-items" onClick={() => setShowForm(true)}>＋　サービスの追加</button>
       {shoForm && (
         <div className="modal-overlay">
           <div className="modal">
-            <div className="service-form">
+            <div className="add-form">
               <input
                 type="text"
                 placeholder="サービス名"
@@ -142,45 +142,52 @@ function Services() {
               }}>編集</button><button className="edit-btn" onClick={() => handleDeleteService(s.id)}>削除</button></td>
 
             </tr>
+
           </tbody>
+
         ))}
 
       </table>
       {changeForm && (
-        <div>
-          <input type="text"
-            placeholder="サービス名"
-            value={changeService.name}
-            onChange={(e) =>
-              setChangeService({
-                ...changeService,
-                name: e.target.value
-              })
-            }
-          />
-          <input type="text"
-            placeholder="時間　例）60分"
-            value={changeService.time}
-            onChange={(e) =>
-              setChangeService({
-                ...changeService,
-                time: e.target.value
-              })
-            }
-          />
-          <input type="number"
-            placeholder="料金"
-            value={changeService.price}
-            onChange={(e) =>
-              setChangeService({
-                ...changeService,
-                price: e.target.value
-              })
-            }
-          />
-          <button onClick={handleChangeService}>変更</button>
-          <button onClick={() => setChangeForm(false)}>キャンセル</button>
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="add-form">
+              <input type="text"
+                placeholder="サービス名"
+                value={changeService.name}
+                onChange={(e) =>
+                  setChangeService({
+                    ...changeService,
+                    name: e.target.value
+                  })
+                }
+              />
+              <input type="text"
+                placeholder="時間　例）60分"
+                value={changeService.time}
+                onChange={(e) =>
+                  setChangeService({
+                    ...changeService,
+                    time: e.target.value
+                  })
+                }
+              />
+              <input type="number"
+                placeholder="料金"
+                value={changeService.price}
+                onChange={(e) =>
+                  setChangeService({
+                    ...changeService,
+                    price: e.target.value
+                  })
+                }
+              />
+              <button onClick={handleChangeService}>変更</button>
+              <button onClick={() => setChangeForm(false)}>キャンセル</button>
+            </div>
+          </div>
         </div>
+
       )}
 
     </div >
