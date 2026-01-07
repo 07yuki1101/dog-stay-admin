@@ -6,7 +6,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
-  overflow: hidden;
+  overflow-y: hidden;
 }
 
 code {
@@ -164,7 +164,7 @@ table tr:hover{
   border: 1px solid#ccc;
   border-radius: 8px;
   background: #f4f4f4;
-  padding: 16px;
+  padding: 16px 40px;
 }
 .modal button{
   display: block;

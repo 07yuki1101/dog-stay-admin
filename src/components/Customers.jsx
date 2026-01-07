@@ -23,7 +23,13 @@ function Customers({ customers, setCustomers }) {
     )
     setChangeForm(false)
   };
-
+  const handleDeleteCustomer = (id)=>{
+    setCustomers(prev=>
+      prev.filter(customer=>
+        customer.id !== id
+      )
+    )
+  }
   const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   const [search, setSearch] = useState('');
@@ -120,7 +126,7 @@ function Customers({ customers, setCustomers }) {
                 dog:s.dog,
                 breed:s.breed,
                 phoneNumber:s.phoneNumber
-              })}}>編集</button><button className="edit-btn" onClick={(e)=>{e.stopPropagation()}}>削除</button></td>
+              })}}>編集</button><button className="edit-btn" onClick={(e)=>{e.stopPropagation();handleDeleteCustomer(s.id)}}>削除</button></td>
             </tr>
           ))}
         </tbody>

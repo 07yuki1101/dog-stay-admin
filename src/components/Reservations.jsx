@@ -1,5 +1,32 @@
 import { useState } from "react";
 function Reservations({ reservations, setReservations, customers, setCustomers }) {
+  const [changeForm, setChangeForm] = useState(false)
+  const [changeReservation, setChangeReservation] = useState({
+    date: '', time: '', menu: '', fee: ''
+  })
+  const handleChangeReservation = () => {
+    setReservations(prev =>
+      prev.map(reservation =>
+        reservation.id === changeReservation.id
+          ? {
+            ...reservation,
+            date: changeReservation.date,
+            time: changeReservation.time,
+            menu: changeReservation.menu,
+            fee: changeReservation.fee
+          }
+          : reservation
+      )
+    )
+    setChangeForm(false)
+  };
+  const handelDeleteReservation = (id) => {
+    setReservations(prev =>
+      prev.filter(reservation =>
+        reservation.id !== id
+      )
+    )
+  };
   const today = new Date().toISOString().split('T')[0]
   const [showForm, setShowForm] = useState(false);
   const [newReservation, setNewReservation] = useState({
@@ -96,6 +123,7 @@ function Reservations({ reservations, setReservations, customers, setCustomers }
               <th>名前</th>
               <th>サービス</th>
               <th>状態</th>
+              <th></th>
             </tr>
           </thead>
 
@@ -113,12 +141,61 @@ function Reservations({ reservations, setReservations, customers, setCustomers }
                       : r.status === '完了' ? 'status-green' : 'status-red'
                       }`}
                     onClick={(e) => { e.stopPropagation(); handleStatusChange(r.id); }}>{r.status}</button></td>
+                  <td>
+                    <button className="edit-btn"
+                      onClick={(e) => {
+                        e.stopPropagation(); setChangeForm(true); setChangeReservation({
+                          id: r.id,
+                          date: r.date,
+                          time: r.time,
+                          menu: r.menu,
+                          fee: r.fee
+                        })
+                      }}>編集</button><button className="edit-btn" onClick={(e) => { e.stopPropagation() ;handelDeleteReservation(r.id)}}>削除</button></td>
                 </tr>
               );
             })}
           </tbody>
         </table>
       </div>
+      {changeForm && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="add-form">
+              <input type="date"
+                value={changeReservation.date}
+                onChange={(e) =>
+                  setChangeReservation({
+                    ...changeReservation, date: e.target.value
+                  })
+                } />
+              <input type="time"
+                value={changeReservation.time}
+                onChange={(e) =>
+                  setChangeReservation({
+                    ...changeReservation, time: e.target.value
+                  })
+                } />
+              <input type="text"
+                value={changeReservation.menu}
+                onChange={(e) =>
+                  setChangeReservation({
+                    ...changeReservation, menu: e.target.value
+                  })
+                } />
+              <input type="number"
+                value={changeReservation.fee}
+                onChange={(e) =>
+                  setChangeReservation({
+                    ...changeReservation, fee: e.target.value
+                  })
+                } />
+              <button onClick={handleChangeReservation}>更新</button>
+              <button onClick={() => setChangeForm(false)}>キャンセル</button>
+            </div>
+          </div>
+        </div>
+      )}
       {selectedReservation && (() => {
         const customer = getCustomerById(selectedReservation.customerId);
         return (

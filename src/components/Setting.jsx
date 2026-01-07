@@ -1,14 +1,11 @@
 function Dashboard() {
   return (
-    <div>
-      <div style={{
-        padding: '40px ',
-
-      }}>
-        <h1>設定</h1>
+    <div className="container">
+      
+        <h2 className="section-title">設定</h2>
       </div>
 
-    </div>
+    
   );
 };
 export default Dashboard;
