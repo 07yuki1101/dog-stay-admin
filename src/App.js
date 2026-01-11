@@ -1,12 +1,14 @@
 import logo from './logo.svg';
+
 import './App.css';
+import Login from './components/Login';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import Services from './components/Services';
 import Reservations from './components/Reservations';
 import Customers from './components/Customers';
 import Setting from './components/Setting';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function App() {
   const [reservations, setReservations] = useState([
@@ -22,18 +24,31 @@ function App() {
     { id: 2, name: '北島三郎', breed: 'ダックスフンド', dog: 'はな', phoneNumber: '090-0000-0002', },
     { id: 3, name: '伊藤四郎', breed: 'シュナウザー', dog: 'うる', phoneNumber: '090-0000-0003', },
     { id: 4, name: '稲垣五郎', breed: 'ミックス', dog: 'ラニ', phoneNumber: '090-0000-0004', },
-  ])
+  ]);
   const [services, setServices] = useState([
     { id: 0, name: 'ホテル', time: '24時間', price: '8000', status: '公開中' },
     { id: 1, name: 'トリミング', time: '120分', price: '6000', status: '公開中' },
     { id: 2, name: '散歩代行', time: '60分', price: '3000', status: '公開中' },
   ]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(()=>{
+    if(localStorage.getItem('login')==='true'){
+      setIsLoggedIn(true);
+    }
+  },[]);
+    
   const [page, setPage] = useState('dashboard')
   return (
+    <>
+    {! isLoggedIn ?(
+      <Login setIsLoggedIn ={setIsLoggedIn}/>
+    ):(
+
     <div style={{
       display: 'flex'
     }}>
-      <Sidebar page={page} onChangePage={setPage} />
+   
+      <Sidebar page={page} onChangePage={setPage} setIsLoggedIn={setIsLoggedIn}/>
 
       {page === 'reservations' &&
         <Reservations
@@ -55,8 +70,13 @@ function App() {
         reservations={reservations}
         setReservations={setReservations}
       />}
-      {page === 'setting' && <Setting />}
+      {page === 'setting' && <Setting 
+        isLoggedIn={isLoggedIn}
+        setIsLoggedIn={setIsLoggedIn}      
+      />}
     </div>
+)}
+    </>
   );
 }
 

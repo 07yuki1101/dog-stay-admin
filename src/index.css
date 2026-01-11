@@ -220,3 +220,16 @@ table tr:hover{
   width: 300px;
   height: 24px;
 }
+
+/* ログイン */
+.login{
+  text-align: center;
+  margin: 60px auto;
+  width: 400px;
+}
+.login input{
+  display: block;
+  text-align: center;
+  margin: 20px auto;
+  height: 24px;
+}

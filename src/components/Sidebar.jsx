@@ -1,10 +1,10 @@
-function Sidebar({ page, onChangePage }) {
+function Sidebar({ page, onChangePage ,setIsLoggedIn}) {
   const menuList = [
     { id: 'dashboard', label: 'Dashboard' },
     { id: 'reservations', label: 'Reservations' },
     { id: 'services', label: 'Services' },
     { id: 'customers', label: 'Customers' },
-    { id: 'setting', label: 'Setting' },
+    // { id: 'setting', label: 'Setting' },
   ];
   return (
     <div className="sidebar">
@@ -18,6 +18,12 @@ function Sidebar({ page, onChangePage }) {
           {menu.label}
         </button>
       ))}
+      
+        <button onClick={()=>{setIsLoggedIn(false);
+          localStorage.removeItem('login');
+          setIsLoggedIn(false)
+        }}>ログアウト</button>
+     
     </div>
 
   );
