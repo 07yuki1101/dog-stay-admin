@@ -1,11 +1,7 @@
 import { useState } from "react";
 
-function Services() {
-  const [services, setServices] = useState([
-    { id: '0', name: 'ホテル', time: '24時間', price: '8000', status: '公開中' },
-    { id: '1', name: 'トリミング', time: '120分', price: '6000', status: '公開中' },
-    { id: '2', name: '散歩代行', time: '60分', price: '3000', status: '公開中' },
-  ]);
+function Services({services,setServices}) {
+  
   const handleDeleteService = (id) => {
     setServices(prev =>
       prev.filter(service =>
@@ -76,6 +72,8 @@ function Services() {
     <div className="container">
       <h2 className="section-title">サービス一覧</h2>
       <button className="add-items" onClick={() => setShowForm(true)}>＋　サービスの追加</button>
+     
+      {/* 新規追加 */}
       {shoForm && (
         <div className="modal-overlay">
           <div className="modal">
@@ -104,12 +102,15 @@ function Services() {
                   setNewService({ ...newService, price: e.target.value })
                 }
               />
+              <div className="end-btn">
               <button onClick={handleAddService}>追加</button>
               <button onClick={() => setShowForm(false)}>キャンセル</button>
+              </div>
             </div>
           </div>
         </div>
       )}
+      <div className="table-wrapper">
       <table className="service-table">
         <thead>
           <tr>
@@ -120,8 +121,9 @@ function Services() {
             <th></th>
           </tr>
         </thead>
-        {services.map((s) => (
-          <tbody>
+        <tbody>
+          {services.map((s) => (
+
             <tr key={s.id}>
               <td>{s.name}</td>
               <td>{s.time}</td>
@@ -143,11 +145,14 @@ function Services() {
 
             </tr>
 
-          </tbody>
 
-        ))}
 
+          ))}
+        </tbody>
       </table>
+      </div>
+
+      {/* サービス変更 */}
       {changeForm && (
         <div className="modal-overlay">
           <div className="modal">
@@ -182,8 +187,10 @@ function Services() {
                   })
                 }
               />
+              <div className="end-btn">
               <button onClick={handleChangeService}>変更</button>
               <button onClick={() => setChangeForm(false)}>キャンセル</button>
+              </div>
             </div>
           </div>
         </div>

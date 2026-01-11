@@ -194,14 +194,26 @@ table tr:hover{
 .add-form{
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
   width: 200px;
   
 }
 .add-form input{
   display: block;
+  padding: 0;
+  margin: 0;
   width: 100%;
   height: 24px;
+}
+.add-form select{
+  display: block;
+  width: 100%;
+  height: 28px;
+  padding: 0;
+  margin: 0;
+}
+.end-btn button{
+  margin-bottom: 8px;
 }
 /* 顧客一覧/ */
 .search-input{

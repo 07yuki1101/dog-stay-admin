@@ -9,23 +9,24 @@ function Customers({ customers, setCustomers }) {
     phoneNumber: ''
   });
   const handleChangeCustomer = () => {
-    setCustomers(prev=>
-      prev.map(customer=>
-        customer.id ===changeCustomer.id
-        ? {...customer,
-          name:changeCustomer.name,
-          breed:changeCustomer.breed,
-          dog:changeCustomer.dog,
-          phoneNumber:changeCustomer.phoneNumber
-        }
-        :customer
+    setCustomers(prev =>
+      prev.map(customer =>
+        customer.id === changeCustomer.id
+          ? {
+            ...customer,
+            name: changeCustomer.name,
+            breed: changeCustomer.breed,
+            dog: changeCustomer.dog,
+            phoneNumber: changeCustomer.phoneNumber
+          }
+          : customer
       )
     )
     setChangeForm(false)
   };
-  const handleDeleteCustomer = (id)=>{
-    setCustomers(prev=>
-      prev.filter(customer=>
+  const handleDeleteCustomer = (id) => {
+    setCustomers(prev =>
+      prev.filter(customer =>
         customer.id !== id
       )
     )
@@ -97,111 +98,114 @@ function Customers({ customers, setCustomers }) {
                 placeholder="電話番号 例）000-0000-0000"
                 value={newCustomer.phoneNumber}
                 onChange={(e) => setNewCustomer({ ...newCustomer, phoneNumber: e.target.value })} />
-
-              <button onClick={handleAddCustomer}>追加</button>
-              <button onClick={() => setShowForm(false)}>キャンセル</button>
+              <div className="end-btn">
+                <button onClick={handleAddCustomer}>追加</button>
+                <button onClick={() => setShowForm(false)}>キャンセル</button>
+              </div>
             </div>
           </div>
         </div>
       )}
       <div className="table-wrapper">
-      <table className="table">
-        <thead>
-          <tr>
-            <th>名前</th>
-            <th>ペット名</th>
-            <th>電話番号</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredCustomers.map((s) => (
-            <tr key={s.id} onClick={() => setSelectedCustomer(s)}>
-              <td>{s.name}</td>
-              <td>{s.dog}</td>
-              <td>{s.phoneNumber}</td>
-              <td><button className="edit-btn" onClick={(e)=>{e.stopPropagation();setChangeForm(true);setChangeCustomer({
-                id:s.id,
-                name:s.name,
-                dog:s.dog,
-                breed:s.breed,
-                phoneNumber:s.phoneNumber
-              })}}>編集</button><button className="edit-btn" onClick={(e)=>{e.stopPropagation();handleDeleteCustomer(s.id)}}>削除</button></td>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>名前</th>
+              <th>ペット名</th>
+              <th>電話番号</th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredCustomers.map((s) => (
+              <tr key={s.id} onClick={() => setSelectedCustomer(s)}>
+                <td>{s.name}</td>
+                <td>{s.dog}</td>
+                <td>{s.phoneNumber}</td>
+                <td><button className="edit-btn" onClick={(e) => {
+                  e.stopPropagation(); setChangeForm(true); setChangeCustomer({
+                    id: s.id,
+                    name: s.name,
+                    dog: s.dog,
+                    breed: s.breed,
+                    phoneNumber: s.phoneNumber
+                  })
+                }}>編集</button><button className="edit-btn" onClick={(e) => { e.stopPropagation(); handleDeleteCustomer(s.id) }}>削除</button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
       {changeForm && (
         <div className="modal-overlay">
           <div className="modal">
             <div className="add-form">
-              <input type="text" 
-              value={changeCustomer.name}
-              placeholder="名前"
-              onChange={(e)=>
-                setChangeCustomer({
-                  ...changeCustomer,name:e.target.value
-                })
-              }/>
-              <input type="text" 
-              value={changeCustomer.id}
-              placeholder="顧客番号"
-              onChange={(e)=>
-                setChangeCustomer({
-                  ...changeCustomer,id:e.target.value
-                })
-              }/>
               <input type="text"
-              placeholder="ペット名" 
-              value={changeCustomer.dog}
-              onChange={(e)=>
-                setChangeCustomer({
-                  ...changeCustomer,dog:e.target.value
-                })
-              }
+                value={changeCustomer.name}
+                placeholder="名前"
+                onChange={(e) =>
+                  setChangeCustomer({
+                    ...changeCustomer, name: e.target.value
+                  })
+                } />
+              <input
+                type="text"
+                value={changeCustomer.id ?? ""}
+                placeholder="顧客番号"
+                onChange={(e) =>
+                  setChangeCustomer({
+                    ...changeCustomer, id: Number(e.target.value)
+                  })
+                } />
+
+              <input type="text"
+                placeholder="ペット名"
+                value={changeCustomer.dog}
+                onChange={(e) =>
+                  setChangeCustomer({
+                    ...changeCustomer, dog: e.target.value
+                  })
+                }
               />
               <input type="text"
-              placeholder="犬種" 
-              value={changeCustomer.breed}
-              onChange={(e)=>
-                setChangeCustomer({
-                  ...changeCustomer,breed:e.target.value
-                })
-              }
+                placeholder="犬種"
+                value={changeCustomer.breed}
+                onChange={(e) =>
+                  setChangeCustomer({
+                    ...changeCustomer, breed: e.target.value
+                  })
+                }
               />
               <input type="text"
-              placeholder="電話番号" 
-              value={changeCustomer.phoneNumber}
-              onChange={(e)=>
-                setChangeCustomer({
-                  ...changeCustomer,phoneNumber:e.target.value
-                })
-              }
+                placeholder="電話番号"
+                value={changeCustomer.phoneNumber}
+                onChange={(e) =>
+                  setChangeCustomer({
+                    ...changeCustomer, phoneNumber: e.target.value
+                  })
+                }
               />
-              <button onClick={handleChangeCustomer}>変更</button>
-              <button onClick={(e)=>{e.stopPropagation();setChangeForm(false)}}>キャンセル</button>
+              <div className="end-btn">
+                <button onClick={handleChangeCustomer}>変更</button>
+                <button onClick={(e) => { e.stopPropagation(); setChangeForm(false) }}>キャンセル</button>
+              </div>
             </div>
           </div>
         </div>
       )}
-      {selectedCustomer && (() => {
-
-        return (
-          <div className="modal-overlay">
-            <div className="modal">
-              <h3>顧客詳細</h3>
-              <p>名前: {selectedCustomer.name}</p>
-              <p>顧客番号: {selectedCustomer.id}</p>
-              <p>ペット名:{selectedCustomer.dog}</p>
-              <p>種類: {selectedCustomer.breed}</p>
-              <p>電話番号: {selectedCustomer.phoneNumber}</p>
-              <button onClick={() => setSelectedCustomer(null)}>閉じる</button>
-            </div>
-
+      {selectedCustomer && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>顧客詳細</h3>
+            <p>名前: {selectedCustomer.name}</p>
+            <p>顧客番号: {selectedCustomer.id}</p>
+            <p>ペット名:{selectedCustomer.dog}</p>
+            <p>種類: {selectedCustomer.breed}</p>
+            <p>電話番号: {selectedCustomer.phoneNumber}</p>
+            <button onClick={() => setSelectedCustomer(null)}>閉じる</button>
           </div>
-        )
-      })()}
+        </div>
+      )}
 
     </div>
   );
