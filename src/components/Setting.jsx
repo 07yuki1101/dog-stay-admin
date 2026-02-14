@@ -4,7 +4,7 @@ function Setting({isLoggedIn,setIsLoggedIn}) {
       
         <h2 className="section-title">設定</h2>
 
-        <button onClick={()=>setIsLoggedIn(false)}>ログアウト</button>
+        <button onClick={()=>setIsLoggedIn(false)}>Logout</button>
       </div>
 
     

@@ -1,5 +1,3 @@
-import logo from './logo.svg';
-
 import './App.css';
 import Login from './components/Login';
 import Sidebar from './components/Sidebar';
@@ -11,20 +9,9 @@ import Setting from './components/Setting';
 import { useEffect, useState } from 'react';
 
 function App() {
-  const [reservations, setReservations] = useState([
-    { id: 0, customerId: 0, date: '2025-12-20', time: '10:00', serviceId: 0, status: '予約中' },
-    { id: 1, customerId: 1, date: '2025-12-20', time: '9:00', serviceId: 1, status: '予約中' },
-    { id: 2, customerId: 2, date: '2025-12-20', time: '8:00', serviceId: 2, status: '予約中' },
-    { id: 3, customerId: 3, date: '2025-12-19', time: '14:00', serviceId: 1, status: '完了' },
-    { id: 4, customerId: 4, date: '2025-12-19', time: '16:00', serviceId: 0, status: 'キャンセル' },
-  ]);
-  const [customers, setCustomers] = useState([
-    { id: 0, name: '鈴木一郎', breed: '柴犬', dog: 'ポチ', phoneNumber: '090-0000-0000', },
-    { id: 1, name: '佐藤二郎', breed: 'トイプードル', dog: 'モコ', phoneNumber: '090-0000-0001', },
-    { id: 2, name: '北島三郎', breed: 'ダックスフンド', dog: 'はな', phoneNumber: '090-0000-0002', },
-    { id: 3, name: '伊藤四郎', breed: 'シュナウザー', dog: 'うる', phoneNumber: '090-0000-0003', },
-    { id: 4, name: '稲垣五郎', breed: 'ミックス', dog: 'ラニ', phoneNumber: '090-0000-0004', },
-  ]);
+  const [loaded, setLoaded]=useState(false);
+  const [reservations, setReservations] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const [services, setServices] = useState([
     { id: 0, name: 'ホテル', time: '24時間', price: '8000', status: '公開中' },
     { id: 1, name: 'トリミング', time: '120分', price: '6000', status: '公開中' },
@@ -38,6 +25,34 @@ function App() {
   },[]);
     
   const [page, setPage] = useState('dashboard')
+
+  useEffect(()=>{
+    
+    const savedReservations = localStorage.getItem('reservations');
+    const savedCustomers = localStorage.getItem('customers');
+    const savedServices = localStorage.getItem('services');
+
+    if(savedReservations)setReservations(JSON.parse(savedReservations));
+    if(savedCustomers)setCustomers(JSON.parse(savedCustomers));
+    if(savedServices)setServices(JSON.parse(savedServices));
+   
+    setLoaded(true);
+  },[])
+
+  useEffect(()=>{
+    if(!loaded)return;
+    localStorage.setItem('reservations',JSON.stringify(reservations));
+  },[reservations,loaded]);
+  useEffect(()=>{
+    if(!loaded)return;
+    localStorage.setItem('customers',JSON.stringify(customers));
+  },[customers,loaded]);
+  useEffect(()=>{
+    if(!loaded)return;
+    localStorage.setItem('services',JSON.stringify(services));
+  },[services,loaded]);
+  
+ 
   return (
     <>
     {! isLoggedIn ?(
@@ -60,6 +75,7 @@ function App() {
         />}
       {page === 'dashboard' && <Dashboard
         reservations={reservations}
+        services={services}
       />}
       {page === 'services' && <Services
         services={services}

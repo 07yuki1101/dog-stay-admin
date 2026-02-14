@@ -99,7 +99,7 @@ function Services({services,setServices}) {
                 placeholder="料金"
                 value={newService.price}
                 onChange={(e) =>
-                  setNewService({ ...newService, price: e.target.value })
+                  setNewService({ ...newService, price:Number( e.target.value )})
                 }
               />
               <div className="end-btn">
@@ -183,7 +183,7 @@ function Services({services,setServices}) {
                 onChange={(e) =>
                   setChangeService({
                     ...changeService,
-                    price: e.target.value
+                    price:Number( e.target.value)
                   })
                 }
               />

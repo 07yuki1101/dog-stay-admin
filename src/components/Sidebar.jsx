@@ -22,7 +22,7 @@ function Sidebar({ page, onChangePage ,setIsLoggedIn}) {
         <button onClick={()=>{setIsLoggedIn(false);
           localStorage.removeItem('login');
           setIsLoggedIn(false)
-        }}>ログアウト</button>
+        }}>Logout</button>
      
     </div>
 

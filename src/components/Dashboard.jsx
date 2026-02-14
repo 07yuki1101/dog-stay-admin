@@ -1,14 +1,12 @@
-function Dashboard({reservations}) {
+function Dashboard({reservations,services}) {
   const today = new Date().toISOString().split('T')[0]
-  const total = reservations.length;
   const reserved = reservations.filter(r=>r.date === today && r.status==='予約中').length;
-  const sales = reservations.filter(r=>r.date ===today && r.status==='完了').reduce((sum,r)=>sum+ Number(r.fee),0);
+  const sales = reservations.filter(r=>r.date ===today && r.status==='完了').reduce((sum,r)=>{
+    const service = services.find(s=>s.id === Number(r.serviceId));
+    return sum + Number(service?.price || 0);
+  },0);
   const canceled = reservations.filter(r=>r.date === today && r.status==='キャンセル').length;
-  const dashboardMenus = [
-    { label: '予約数', value: '3 件' },
-    { label: '売上', value: '¥12000' },
-    { label: 'キャンセル', value: '1件' }
-  ];
+  
   
   return (
     <div className="container">
