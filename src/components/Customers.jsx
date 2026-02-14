@@ -25,11 +25,13 @@ function Customers({ customers, setCustomers }) {
     setChangeForm(false)
   };
   const handleDeleteCustomer = (id) => {
+    const ok = window.confirm('削除しますか？')
+    if(ok){
     setCustomers(prev =>
       prev.filter(customer =>
         customer.id !== id
       )
-    )
+    )}return;
   }
   const [selectedCustomer, setSelectedCustomer] = useState(null);
 

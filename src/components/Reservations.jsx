@@ -37,11 +37,13 @@ function Reservations({ reservations, setReservations, customers, setCustomers, 
     setShowForm(false)
   };
   const handleDeleteReservation = (id) => {
+    const ok = window.confirm('削除しますか？')
+    if(ok){
     setReservations(prev =>
       prev.filter(reservation =>
         reservation.id !== id
       )
-    )
+    )}return;
   };
   const [changeForm, setChangeForm] = useState(false);
   const [changeReservation, setChangeReservation] = useState({

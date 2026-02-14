@@ -3,11 +3,13 @@ import { useState } from "react";
 function Services({services,setServices}) {
   
   const handleDeleteService = (id) => {
+    const ok =window.confirm('削除しますか？');
+    if(ok){
     setServices(prev =>
       prev.filter(service =>
         service.id !== id
       )
-    );
+    )}return;
   };
   const [changeForm, setChangeForm] = useState(false);
   const [changeService, setChangeService] = useState({
