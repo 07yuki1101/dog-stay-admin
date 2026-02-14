@@ -1,70 +1,65 @@
-# Getting Started with Create React App
+# Dog Stay Admin（予約管理アプリ）
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- Demo: https://dog-stay-admin.vercel.app/
+- GitHub: （リポジトリURLを追記）
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 概要
+ペットサロンの予約管理を想定した管理画面アプリです。  
+店舗据え置きPCでの利用を前提とし、スタッフが日々の予約状況を簡単に管理できることを目的に制作しました。
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 課題と解決
+### 課題
+- 予約情報の整理・更新が手間になる
+- 管理画面は素早く操作できるUIが必要
+- 店舗PCでの運用が前提のためネットワークに依存しない仕組みが望ましい
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 解決
+- CRUD操作で予約の登録・編集・削除を可能に
+- 一覧形式で状況を把握できるUIに
+- localStorageを用いてオフラインでも利用できる構成に
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 主な機能
+- 予約の登録 / 編集 / 削除
+- ステータス管理
+- 本日の予約状況を一覧で表示
+- localStorageでデータの管理
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 使用技術
+- React / Vite
+- localStorage
+- CSS
+- Vercel
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 技術選定の理由
+本アプリは店舗据え置きPCでの利用を想定して設計しました。
+そのため
+- 常時ログイン管理が不要
+- 小規模データを高速に扱いたい
+- ネットワークに依存しない運用を想定
 
-### `npm run eject`
+以上の理由から、データ保存にDBではなく localStorage を採用しました。  
+シンプルで扱いやすい管理画面を目指しました。
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 工夫した点
+- 一覧画面から直感的に操作できる管理UIを意識
+- 状態の変化が分かりやすいレイアウト設計
+- 入力と表示の流れが途切れない操作感を重視
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 今後の改善予定
+- 複数端末での共有を想定したDB化
+- 検索・フィルター機能の追加
+- 操作履歴の保存
