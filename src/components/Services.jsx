@@ -3,24 +3,25 @@ import { collection, addDoc, deleteDoc, updateDoc, doc, getDocs } from "firebase
 import { db } from "../firebase"
 function Services({ services, setServices }) {
 
-  const fetchServices = async () => {
-    const snapshot = await getDocs(collection(db, 'services'));
-    const data = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-    setServices(data);
-  };
+
 
   useEffect(() => {
+    const fetchServices = async () => {
+      const snapshot = await getDocs(collection(db, 'services'));
+      const data = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setServices(data);
+    };
     fetchServices();
   }, [])
 
-  const handleDeleteService = async(id) => {
+  const handleDeleteService = async (id) => {
     const ok = window.confirm('削除しますか？');
     if (!ok) return;
 
-    await deleteDoc(doc(db,'services',id));
+    await deleteDoc(doc(db, 'services', id));
     fetchServices();
   };
   const [changeForm, setChangeForm] = useState(false);
@@ -30,11 +31,11 @@ function Services({ services, setServices }) {
     time: '',
     price: ''
   });
-  const handleChangeService = async() => {
-    await updateDoc(doc(db,'services',changeService.id),{
-      name:changeService.name,
-      time:changeService.time,
-      price:changeService.price,
+  const handleChangeService = async () => {
+    await updateDoc(doc(db, 'services', changeService.id), {
+      name: changeService.name,
+      time: changeService.time,
+      price: changeService.price,
     });
     fetchServices();
     setChangeForm(false);
@@ -60,17 +61,14 @@ function Services({ services, setServices }) {
     setShowForm(false);
   };
 
-  const getNextStatus = (status) => {
-    if (status === '公開中') return '停止中'
-    if (status === '停止中') return '公開中'
-  };
 
-  const handleStatusChange = async(id,currentStatus) => {
+
+  const handleStatusChange = async (id, currentStatus) => {
     const nextStatus =
-    currentStatus === '公開中' ?'停止中':'公開中';
+      currentStatus === '公開中' ? '停止中' : '公開中';
 
-    await updateDoc(doc(db,'services',id),{
-      status:nextStatus
+    await updateDoc(doc(db, 'services', id), {
+      status: nextStatus
     });
     fetchServices()
   };
@@ -138,7 +136,7 @@ function Services({ services, setServices }) {
                   ? 'status-blue'
                   : 'status-red'
                   }`}
-                  onClick={() => handleStatusChange(s.id,s.status)}>{s.status}</button></td>
+                  onClick={() => handleStatusChange(s.id, s.status)}>{s.status}</button></td>
                 <td><button className="edit-btn" onClick={() => {
                   setChangeService({
                     id: s.id,
