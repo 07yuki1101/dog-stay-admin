@@ -1,15 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { collection, addDoc, deleteDoc, updateDoc, doc, getDocs } from "firebase/firestore";
+import { db } from "../firebase"
+function Services({ services, setServices }) {
 
-function Services({services,setServices}) {
-  
-  const handleDeleteService = (id) => {
-    const ok =window.confirm('削除しますか？');
-    if(ok){
-    setServices(prev =>
-      prev.filter(service =>
-        service.id !== id
-      )
-    )}return;
+  const fetchServices = async () => {
+    const snapshot = await getDocs(collection(db, 'services'));
+    const data = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    setServices(data);
+  };
+
+  useEffect(() => {
+    fetchServices();
+  }, [])
+
+  const handleDeleteService = async(id) => {
+    const ok = window.confirm('削除しますか？');
+    if (!ok) return;
+
+    await deleteDoc(doc(db,'services',id));
+    fetchServices();
   };
   const [changeForm, setChangeForm] = useState(false);
   const [changeService, setChangeService] = useState({
@@ -18,19 +30,13 @@ function Services({services,setServices}) {
     time: '',
     price: ''
   });
-  const handleChangeService = () => {
-    setServices(prev =>
-      prev.map(service =>
-        service.id === changeService.id
-          ? {
-            ...service,
-            name: changeService.name,
-            time: changeService.time,
-            price: changeService.price
-          }
-          : service
-      )
-    );
+  const handleChangeService = async() => {
+    await updateDoc(doc(db,'services',changeService.id),{
+      name:changeService.name,
+      time:changeService.time,
+      price:changeService.price,
+    });
+    fetchServices();
     setChangeForm(false);
   }
 
@@ -41,17 +47,15 @@ function Services({services,setServices}) {
     price: ''
   });
 
-  const handleAddService = () => {
-    setServices([
-      ...services,
-      {
-        id: Date.now(),
-        name: newService.name,
-        time: newService.time,
-        price: newService.price,
-        status: '公開中'
-      },
-    ]);
+  const handleAddService = async () => {
+    await addDoc(collection(db, 'services'), {
+      name: newService.name,
+      time: newService.time,
+      price: newService.price,
+      status: '公開中'
+    })
+
+    fetchServices();
     setNewService({ name: '', time: '', price: '' });
     setShowForm(false);
   };
@@ -61,20 +65,20 @@ function Services({services,setServices}) {
     if (status === '停止中') return '公開中'
   };
 
-  const handleStatusChange = (id) => {
-    setServices(prev =>
-      prev.map(s =>
-        s.id === id
-          ? { ...s, status: getNextStatus(s.status) }
-          : s
-      )
-    )
+  const handleStatusChange = async(id,currentStatus) => {
+    const nextStatus =
+    currentStatus === '公開中' ?'停止中':'公開中';
+
+    await updateDoc(doc(db,'services',id),{
+      status:nextStatus
+    });
+    fetchServices()
   };
   return (
     <div className="container">
       <h2 className="section-title">サービス一覧</h2>
       <button className="add-items" onClick={() => setShowForm(true)}>＋　サービスの追加</button>
-     
+
       {/* 新規追加 */}
       {shoForm && (
         <div className="modal-overlay">
@@ -101,57 +105,57 @@ function Services({services,setServices}) {
                 placeholder="料金"
                 value={newService.price}
                 onChange={(e) =>
-                  setNewService({ ...newService, price:Number( e.target.value )})
+                  setNewService({ ...newService, price: Number(e.target.value) })
                 }
               />
               <div className="end-btn">
-              <button onClick={handleAddService}>追加</button>
-              <button onClick={() => setShowForm(false)}>キャンセル</button>
+                <button onClick={handleAddService}>追加</button>
+                <button onClick={() => setShowForm(false)}>キャンセル</button>
               </div>
             </div>
           </div>
         </div>
       )}
       <div className="table-wrapper">
-      <table className="service-table">
-        <thead>
-          <tr>
-            <th>サービス名</th>
-            <th>時間</th>
-            <th>料金</th>
-            <th>状態</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {services.map((s) => (
-
-            <tr key={s.id}>
-              <td>{s.name}</td>
-              <td>{s.time}</td>
-              <td>{s.price}</td>
-              <td><button className={`status-btn ${s.status === '公開中'
-                ? 'status-blue'
-                : 'status-red'
-                }`}
-                onClick={() => handleStatusChange(s.id)}>{s.status}</button></td>
-              <td><button className="edit-btn" onClick={() => {
-                setChangeService({
-                  id: s.id,
-                  name: s.name,
-                  time: s.time,
-                  price: s.price
-                });
-                setChangeForm(true)
-              }}>編集</button><button className="edit-btn" onClick={() => handleDeleteService(s.id)}>削除</button></td>
-
+        <table className="service-table">
+          <thead>
+            <tr>
+              <th>サービス名</th>
+              <th>時間</th>
+              <th>料金</th>
+              <th>状態</th>
+              <th></th>
             </tr>
+          </thead>
+          <tbody>
+            {services.map((s) => (
+
+              <tr key={s.id}>
+                <td>{s.name}</td>
+                <td>{s.time}</td>
+                <td>{s.price}</td>
+                <td><button className={`status-btn ${s.status === '公開中'
+                  ? 'status-blue'
+                  : 'status-red'
+                  }`}
+                  onClick={() => handleStatusChange(s.id,s.status)}>{s.status}</button></td>
+                <td><button className="edit-btn" onClick={() => {
+                  setChangeService({
+                    id: s.id,
+                    name: s.name,
+                    time: s.time,
+                    price: s.price
+                  });
+                  setChangeForm(true)
+                }}>編集</button><button className="edit-btn" onClick={() => handleDeleteService(s.id)}>削除</button></td>
+
+              </tr>
 
 
 
-          ))}
-        </tbody>
-      </table>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {/* サービス変更 */}
@@ -185,13 +189,13 @@ function Services({services,setServices}) {
                 onChange={(e) =>
                   setChangeService({
                     ...changeService,
-                    price:Number( e.target.value)
+                    price: Number(e.target.value)
                   })
                 }
               />
               <div className="end-btn">
-              <button onClick={handleChangeService}>変更</button>
-              <button onClick={() => setChangeForm(false)}>キャンセル</button>
+                <button onClick={handleChangeService}>変更</button>
+                <button onClick={() => setChangeForm(false)}>キャンセル</button>
               </div>
             </div>
           </div>
