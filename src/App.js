@@ -7,91 +7,114 @@ import Reservations from './components/Reservations';
 import Customers from './components/Customers';
 import Setting from './components/Setting';
 import { useEffect, useState } from 'react';
-
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from './firebase';
 function App() {
-  const [loaded, setLoaded]=useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [reservations, setReservations] = useState([]);
+  const [services, setServices] = useState([]);
+  useEffect(() => {
+    const fetchReservations = async () => {
+
+      const snapshot = await getDocs(collection(db, 'reservations'));
+
+      const data = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+
+      setReservations(data);
+    };
+    const fetchServices = async () => {
+      const snapshot = await getDocs(collection(db, 'services'));
+      const data = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setServices(data);
+    };
+    fetchReservations();
+    fetchServices();
+  },[])
+
+
   const [customers, setCustomers] = useState([]);
-  const [services, setServices] = useState([
-    { id: 0, name: 'ホテル', time: '24時間', price: '8000', status: '公開中' },
-    { id: 1, name: 'トリミング', time: '120分', price: '6000', status: '公開中' },
-    { id: 2, name: '散歩代行', time: '60分', price: '3000', status: '公開中' },
-  ]);
+  
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  useEffect(()=>{
-    if(localStorage.getItem('login')==='true'){
+  useEffect(() => {
+    if (localStorage.getItem('login') === 'true') {
       setIsLoggedIn(true);
     }
-  },[]);
-    
+  }, []);
+
   const [page, setPage] = useState('dashboard')
 
-  useEffect(()=>{
-    
+  useEffect(() => {
+
     const savedReservations = localStorage.getItem('reservations');
     const savedCustomers = localStorage.getItem('customers');
     const savedServices = localStorage.getItem('services');
 
-    if(savedReservations)setReservations(JSON.parse(savedReservations));
-    if(savedCustomers)setCustomers(JSON.parse(savedCustomers));
-    if(savedServices)setServices(JSON.parse(savedServices));
-   
-    setLoaded(true);
-  },[])
+    if (savedReservations) setReservations(JSON.parse(savedReservations));
+    if (savedCustomers) setCustomers(JSON.parse(savedCustomers));
+    if (savedServices) setServices(JSON.parse(savedServices));
 
-  useEffect(()=>{
-    if(!loaded)return;
-    localStorage.setItem('reservations',JSON.stringify(reservations));
-  },[reservations,loaded]);
-  useEffect(()=>{
-    if(!loaded)return;
-    localStorage.setItem('customers',JSON.stringify(customers));
-  },[customers,loaded]);
-  useEffect(()=>{
-    if(!loaded)return;
-    localStorage.setItem('services',JSON.stringify(services));
-  },[services,loaded]);
-  
- 
+    setLoaded(true);
+  }, [])
+
+  useEffect(() => {
+    if (!loaded) return;
+    localStorage.setItem('reservations', JSON.stringify(reservations));
+  }, [reservations, loaded]);
+  useEffect(() => {
+    if (!loaded) return;
+    localStorage.setItem('customers', JSON.stringify(customers));
+  }, [customers, loaded]);
+  useEffect(() => {
+    if (!loaded) return;
+    localStorage.setItem('services', JSON.stringify(services));
+  }, [services, loaded]);
+
+
   return (
     <>
-    {! isLoggedIn ?(
-      <Login setIsLoggedIn ={setIsLoggedIn}/>
-    ):(
+      {!isLoggedIn ? (
+        <Login setIsLoggedIn={setIsLoggedIn} />
+      ) : (
 
-    <div style={{
-      display: 'flex'
-    }}>
-   
-      <Sidebar page={page} onChangePage={setPage} setIsLoggedIn={setIsLoggedIn}/>
+        <div style={{
+          display: 'flex'
+        }}>
 
-      {page === 'reservations' &&
-        <Reservations
-          reservations={reservations}
-          setReservations={setReservations}
-          customers={customers}
-          services={services}
-          setServices={setServices}
-        />}
-      {page === 'dashboard' && <Dashboard
-        reservations={reservations}
-        services={services}
-      />}
-      {page === 'services' && <Services
-        services={services}
-        setServices={setServices} />}
-      {page === 'customers' && <Customers
-        customers={customers}
-        setCustomers={setCustomers}
-        reservations={reservations}
-        setReservations={setReservations}
-      />}
-      {page === 'setting' && <Setting 
-        isLoggedIn={isLoggedIn}
-        setIsLoggedIn={setIsLoggedIn}      
-      />}
-    </div>
-)}
+          <Sidebar page={page} onChangePage={setPage} setIsLoggedIn={setIsLoggedIn} />
+
+          {page === 'reservations' &&
+            <Reservations
+              reservations={reservations}
+              setReservations={setReservations}
+              customers={customers}
+              services={services}
+              setServices={setServices}
+            />}
+          {page === 'dashboard' && <Dashboard
+            reservations={reservations}
+            services={services}
+          />}
+          {page === 'services' && <Services
+            services={services}
+            setServices={setServices} />}
+          {page === 'customers' && <Customers
+            customers={customers}
+            setCustomers={setCustomers}
+            reservations={reservations}
+            setReservations={setReservations}
+          />}
+          {page === 'setting' && <Setting
+            isLoggedIn={isLoggedIn}
+            setIsLoggedIn={setIsLoggedIn}
+          />}
+        </div>
+      )}
     </>
   );
 }

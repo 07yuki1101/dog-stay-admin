@@ -3,18 +3,18 @@ import { collection, addDoc, deleteDoc, updateDoc, doc, getDocs } from "firebase
 import { db } from "../firebase"
 function Services({ services, setServices }) {
 
-  const fetchServices = useCallback(async () => {
-    const snapshot = await getDocs(collection(db, 'services'));
-    const data = snapshot.docs.map(doc => ({
-      id: doc.id,
+  const fetchServices =async()=>{
+    const snapshot = await getDocs(collection(db,'services'));
+    const data = snapshot.docs.map(doc=>({
+      id:doc.id,
       ...doc.data()
     }));
-    setServices(data);
-  },[setServices]);
+    setServices(data); 
+  }
 
   useEffect(() => {
     fetchServices();
-  }, [fetchServices])
+  }, [])
 
   const handleDeleteService = async(id) => {
     const ok = window.confirm('削除しますか？');

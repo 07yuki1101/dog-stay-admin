@@ -2,7 +2,7 @@ function Dashboard({reservations,services}) {
   const today = new Date().toISOString().split('T')[0]
   const reserved = reservations.filter(r=>r.date === today && r.status==='予約中').length;
   const sales = reservations.filter(r=>r.date ===today && r.status==='完了').reduce((sum,r)=>{
-    const service = services.find(s=>s.id === Number(r.serviceId));
+    const service = services.find(s=>s.id === r.menu);
     return sum + Number(service?.price || 0);
   },0);
   const canceled = reservations.filter(r=>r.date === today && r.status==='キャンセル').length;
