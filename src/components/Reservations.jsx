@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
+import { useState,} from "react";
+import {updateDoc, doc } from "firebase/firestore";
 import { db } from "../firebase"
 function Reservations({ reservations, setReservations, services }) {
 

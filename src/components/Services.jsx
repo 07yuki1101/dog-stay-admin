@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect} from "react";
 import { collection, addDoc, deleteDoc, updateDoc, doc, getDocs } from "firebase/firestore";
 import { db } from "../firebase"
 function Services({ services, setServices }) {
@@ -14,7 +14,7 @@ function Services({ services, setServices }) {
 
   useEffect(() => {
     fetchServices();
-  }, [])
+  }, [fetchServices])
 
   const handleDeleteService = async(id) => {
     const ok = window.confirm('削除しますか？');
