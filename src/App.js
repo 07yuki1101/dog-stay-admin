@@ -10,9 +10,10 @@ import { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from './firebase';
 function App() {
-  const [loaded, setLoaded] = useState(false);
+
   const [reservations, setReservations] = useState([]);
   const [services, setServices] = useState([]);
+  const [customers, setCustomers] = useState([]);
   useEffect(() => {
     const fetchReservations = async () => {
 
@@ -25,6 +26,7 @@ function App() {
 
       setReservations(data);
     };
+
     const fetchServices = async () => {
       const snapshot = await getDocs(collection(db, 'services'));
       const data = snapshot.docs.map(doc => ({
@@ -33,13 +35,13 @@ function App() {
       }));
       setServices(data);
     };
+
     fetchReservations();
     fetchServices();
-  },[])
+  }, [])
 
 
-  const [customers, setCustomers] = useState([]);
-  
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     if (localStorage.getItem('login') === 'true') {
@@ -49,31 +51,8 @@ function App() {
 
   const [page, setPage] = useState('dashboard')
 
-  useEffect(() => {
 
-    const savedReservations = localStorage.getItem('reservations');
-    const savedCustomers = localStorage.getItem('customers');
-    const savedServices = localStorage.getItem('services');
 
-    if (savedReservations) setReservations(JSON.parse(savedReservations));
-    if (savedCustomers) setCustomers(JSON.parse(savedCustomers));
-    if (savedServices) setServices(JSON.parse(savedServices));
-
-    setLoaded(true);
-  }, [])
-
-  useEffect(() => {
-    if (!loaded) return;
-    localStorage.setItem('reservations', JSON.stringify(reservations));
-  }, [reservations, loaded]);
-  useEffect(() => {
-    if (!loaded) return;
-    localStorage.setItem('customers', JSON.stringify(customers));
-  }, [customers, loaded]);
-  useEffect(() => {
-    if (!loaded) return;
-    localStorage.setItem('services', JSON.stringify(services));
-  }, [services, loaded]);
 
 
   return (

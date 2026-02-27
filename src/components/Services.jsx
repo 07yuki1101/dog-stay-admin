@@ -14,7 +14,7 @@ function Services({ services, setServices }) {
 
   useEffect(() => {
     fetchServices();
-  }, [fetchServices])
+  }, [])
 
   const handleDeleteService = async(id) => {
     const ok = window.confirm('削除しますか？');
