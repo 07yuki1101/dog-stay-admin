@@ -1,6 +1,5 @@
 import { useState } from "react";
-import {updateDoc, doc } from "firebase/firestore";
-import { db } from "../firebase"
+
 function Customers({ customers, setCustomers }) {
   const [changeForm, setChangeForm] = useState(false);
   const [changeCustomer, setChangeCustomer] = useState({
