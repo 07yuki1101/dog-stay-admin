@@ -1,5 +1,6 @@
 import { useState } from "react";
-
+import {updateDoc, doc } from "firebase/firestore";
+import { db } from "../firebase"
 function Customers({ customers, setCustomers }) {
   const [changeForm, setChangeForm] = useState(false);
   const [changeCustomer, setChangeCustomer] = useState({
@@ -113,7 +114,7 @@ function Customers({ customers, setCustomers }) {
           <thead>
             <tr>
               <th>名前</th>
-              <th>ペット名</th>
+              <th>犬種</th>
               <th>電話番号</th>
               <th></th>
             </tr>
@@ -122,8 +123,8 @@ function Customers({ customers, setCustomers }) {
             {filteredCustomers.map((s) => (
               <tr key={s.id} onClick={() => setSelectedCustomer(s)}>
                 <td>{s.name}</td>
-                <td>{s.dog}</td>
-                <td>{s.phoneNumber}</td>
+                <td>{s.dogType}</td>
+                <td>{s.phone}</td>
                 <td><button className="edit-btn" onClick={(e) => {
                   e.stopPropagation(); setChangeForm(true); setChangeCustomer({
                     id: s.id,
@@ -153,7 +154,7 @@ function Customers({ customers, setCustomers }) {
               <input
                 type="text"
                 value={changeCustomer.id ?? ""}
-                placeholder="顧客番号"
+                placeholder="顧客ID"
                 onChange={(e) =>
                   setChangeCustomer({
                     ...changeCustomer, id: Number(e.target.value)
@@ -200,10 +201,9 @@ function Customers({ customers, setCustomers }) {
           <div className="modal">
             <h3>顧客詳細</h3>
             <p>名前: {selectedCustomer.name}</p>
-            <p>顧客番号: {selectedCustomer.id}</p>
-            <p>ペット名:{selectedCustomer.dog}</p>
-            <p>種類: {selectedCustomer.breed}</p>
-            <p>電話番号: {selectedCustomer.phoneNumber}</p>
+            <p>顧客ID: {selectedCustomer.id}</p>
+            <p>犬種: {selectedCustomer.dogType}</p>
+            <p>電話番号: {selectedCustomer.phone}</p>
             <button onClick={() => setSelectedCustomer(null)}>閉じる</button>
           </div>
         </div>

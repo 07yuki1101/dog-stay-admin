@@ -1,13 +1,20 @@
 import { useState,} from "react";
 import {updateDoc, doc } from "firebase/firestore";
 import { db } from "../firebase"
-function Reservations({ reservations, setReservations, services }) {
+function Reservations({ reservations, setReservations, services, customers }) {
 
   const getServiceLabel = (menuId) => {
     const service = services.find(s => s.id === menuId);
     return service ? service.name : menuId;
   }
-
+  const getCustomerName = (customerId) =>{
+    const customer = customers.find(c=>c.id === customerId)
+    return customer ? customer.name : customerId
+  }
+  const getDogType = (customerId) =>{
+    const customer = customers.find(c=>c.id === customerId)
+    return customer ? customer.dogType : customerId
+  }
   const [selectedReservation, setSelectedReservation] = useState(null)
 
   const updateStatus = async (id, currentStatus) => {
@@ -58,8 +65,8 @@ function Reservations({ reservations, setReservations, services }) {
               .map(r => (
                 <tr key={r.id} onClick={() => setSelectedReservation(r)}>
                   <td>{r.date}</td>
-                  <td>{r.name}</td>
-                  <td>{r.dogType}</td>
+                  <td>{getCustomerName(r.customerId)}</td>
+                  <td>{getDogType(r.customerId)}</td>
                   <td>{getServiceLabel(r.menu)}</td>
                   <td><button className={`status-btn ${r.status === '予約中'
                     ? 'status-green'
@@ -77,10 +84,10 @@ function Reservations({ reservations, setReservations, services }) {
           <div className="modal-overlay">
             <div className="modal">
               <h3>予約詳細</h3>
-              <p>名前 : {selectedReservation.name}</p>
+              <p>名前 : {getCustomerName(selectedReservation.customerId)}</p>
               <p>日付 : {selectedReservation.date}</p>
               <p>時間 : {selectedReservation.time}</p>
-              <p>犬種 : {selectedReservation.dogType}</p>
+              <p>犬種 : {getDogType(selectedReservation.customerId)}</p>
               <p>メニュー : {getServiceLabel(selectedReservation.menu)}</p>
               <button onClick={() => setSelectedReservation(null)}>閉じる</button>
             </div>

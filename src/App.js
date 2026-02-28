@@ -16,14 +16,11 @@ function App() {
   const [customers, setCustomers] = useState([]);
   useEffect(() => {
     const fetchReservations = async () => {
-
       const snapshot = await getDocs(collection(db, 'reservations'));
-
       const data = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
-
       setReservations(data);
     };
 
@@ -35,9 +32,18 @@ function App() {
       }));
       setServices(data);
     };
+    const fetchCustomers = async()=>{
+      const snapshot = await getDocs(collection(db,'customers'));
+      const data = snapshot.docs.map(doc =>({
+        id:doc.id,
+        ...doc.data()
+      }));
+      setCustomers(data)
+    }
 
     fetchReservations();
     fetchServices();
+    fetchCustomers();
   }, [])
 
 
