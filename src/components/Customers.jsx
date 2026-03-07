@@ -1,69 +1,84 @@
 import { useState } from "react";
-
+import { collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from "firebase/firestore";
+import { db } from "../firebase"
 function Customers({ customers, setCustomers }) {
   const [changeForm, setChangeForm] = useState(false);
   const [changeCustomer, setChangeCustomer] = useState({
     name: '',
-    breed: '',
-    dog: '',
-    phoneNumber: ''
+    dogType: '',
+    phone: ''
   });
-  const handleChangeCustomer = () => {
+  const handleChangeCustomer = async () => {
+    try{
+    const ref = doc(db, 'customers', changeCustomer.id);
+
+    await updateDoc(ref, {
+      name: changeCustomer.name,
+      dogType: changeCustomer.dogType,
+      phone: changeCustomer.phone
+    });
+
     setCustomers(prev =>
-      prev.map(customer =>
-        customer.id === changeCustomer.id
+      prev.map(c =>
+        c.id === changeCustomer.id
           ? {
-            ...customer,
-            name: changeCustomer.name,
-            breed: changeCustomer.breed,
-            dog: changeCustomer.dog,
-            phoneNumber: changeCustomer.phoneNumber
+            ...c,
+            ...changeCustomer
           }
-          : customer
+          : c
       )
     )
     setChangeForm(false)
-  };
-  const handleDeleteCustomer = (id) => {
-    const ok = window.confirm('削除しますか？')
-    if(ok){
-    setCustomers(prev =>
-      prev.filter(customer =>
-        customer.id !== id
-      )
-    )}return;
+  }catch(error){
+    console.error(error);
+    alert('更新に失敗しました')
   }
+  };
+  const handleDeleteCustomer = async(id) => {
+    try{
+    const ok = window.confirm('削除しますか？')
+    if (ok) {
+      await deleteDoc(doc(db,'customers',id));
+
+      setCustomers(prev =>
+        prev.filter(customer =>
+          customer.id !== id
+        ));
+    }
+  }catch(error){
+    console.error(error);
+    alert('削除に失敗しました')
+  } 
+  };
   const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   const [search, setSearch] = useState('');
   const filteredCustomers = customers.filter((c =>
     c.name.includes(search) ||
-    c.dog.includes(search) ||
-    c.phoneNumber.includes(search)
+    c.dogType.includes(search) ||
+    c.phone.includes(search)
   ));
   const [showForm, setShowForm] = useState(false)
   const [newCustomer, setNewCustomer] = useState({
     name: '',
-    breed: '',
-    dog: '',
-    phoneNumber: ''
+    dogType: '',
+    phone: ''
   })
-  const handleAddCustomer = () => {
-    const nextId =
-      customers.length > 0
-        ? Math.max(...customers.map(c => c.id)) + 1
-        : 0
+  const handleAddCustomer = async () => {
+    const docRef = await addDoc(collection(db, 'customers'), {
+      name: newCustomer.name,
+      dogType: newCustomer.dogType,
+      phone: newCustomer.phone,
+      createdAt: serverTimestamp()
+    });
     setCustomers(prev => [
       ...prev,
       {
-        id: nextId,
-        name: newCustomer.name,
-        breed: newCustomer.breed,
-        dog: newCustomer.dog,
-        phoneNumber: newCustomer.phoneNumber
+        id: docRef.id,
+        ...newCustomer
       }
-    ])
-    setNewCustomer({ name: '', breed: '', dog: '', phoneNumber: '' })
+    ]);
+    setNewCustomer({ name: '', dogType: '', phone: '' })
     setShowForm(false)
   };
   return (
@@ -86,23 +101,19 @@ function Customers({ customers, setCustomers }) {
                 value={newCustomer.name}
                 onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })} />
 
+
               <input type="text"
                 placeholder="犬種"
-                value={newCustomer.breed}
-                onChange={(e) => setNewCustomer({ ...newCustomer, breed: e.target.value })} />
+                value={newCustomer.dogType}
+                onChange={(e) => setNewCustomer({ ...newCustomer, dogType: e.target.value })} />
 
-              <input type="text"
-                placeholder="ペット名"
-                value={newCustomer.dog}
-                onChange={(e) => setNewCustomer({ ...newCustomer, dog: e.target.value })} />
-
-              <input type="text"
-                placeholder="電話番号 例）000-0000-0000"
-                value={newCustomer.phoneNumber}
-                onChange={(e) => setNewCustomer({ ...newCustomer, phoneNumber: e.target.value })} />
+              <input type="tel"
+                placeholder="電話番号 (ハイフンはつけない)"
+                value={newCustomer.phone}
+                onChange={(e) => setNewCustomer({ ...newCustomer, phone: e.target.value })} />
               <div className="end-btn">
                 <button onClick={handleAddCustomer}>追加</button>
-                <button onClick={() => setShowForm(false)}>キャンセル</button>
+                <button onClick={() => {setShowForm(false);setNewCustomer({ name: '', dogType: '', phone: '' })}}>キャンセル</button>
               </div>
             </div>
           </div>
@@ -119,20 +130,19 @@ function Customers({ customers, setCustomers }) {
             </tr>
           </thead>
           <tbody>
-            {filteredCustomers.map((s) => (
-              <tr key={s.id} onClick={() => setSelectedCustomer(s)}>
-                <td>{s.name}</td>
-                <td>{s.dogType}</td>
-                <td>{s.phone}</td>
+            {filteredCustomers.map((c) => (
+              <tr key={c.id} onClick={() => setSelectedCustomer(c)}>
+                <td>{c.name}</td>
+                <td>{c.dogType}</td>
+                <td>{c.phone}</td>
                 <td><button className="edit-btn" onClick={(e) => {
-                  e.stopPropagation(); setChangeForm(true); setChangeCustomer({
-                    id: s.id,
-                    name: s.name,
-                    dog: s.dog,
-                    breed: s.breed,
-                    phoneNumber: s.phoneNumber
+                  e.stopPropagation(); setChangeForm(true);setChangeCustomer({
+                    id:c.id,
+                    name:c.name,
+                    dogType:c.dogType,
+                    phone:c.phone
                   })
-                }}>編集</button><button className="edit-btn" onClick={(e) => { e.stopPropagation(); handleDeleteCustomer(s.id) }}>削除</button></td>
+                }}>編集</button><button className="edit-btn" onClick={(e) => { e.stopPropagation(); handleDeleteCustomer(c.id) }}>削除</button></td>
               </tr>
             ))}
           </tbody>
@@ -150,40 +160,24 @@ function Customers({ customers, setCustomers }) {
                     ...changeCustomer, name: e.target.value
                   })
                 } />
-              <input
-                type="text"
-                value={changeCustomer.id ?? ""}
-                placeholder="顧客ID"
-                onChange={(e) =>
-                  setChangeCustomer({
-                    ...changeCustomer, id: Number(e.target.value)
-                  })
-                } />
+
 
               <input type="text"
-                placeholder="ペット名"
-                value={changeCustomer.dog}
-                onChange={(e) =>
-                  setChangeCustomer({
-                    ...changeCustomer, dog: e.target.value
-                  })
-                }
-              />
-              <input type="text"
                 placeholder="犬種"
-                value={changeCustomer.breed}
+                value={changeCustomer.dogType}
                 onChange={(e) =>
                   setChangeCustomer({
-                    ...changeCustomer, breed: e.target.value
+                    ...changeCustomer, dogType: e.target.value
                   })
                 }
               />
+
               <input type="text"
                 placeholder="電話番号"
-                value={changeCustomer.phoneNumber}
+                value={changeCustomer.phone}
                 onChange={(e) =>
                   setChangeCustomer({
-                    ...changeCustomer, phoneNumber: e.target.value
+                    ...changeCustomer, phone: e.target.value
                   })
                 }
               />
